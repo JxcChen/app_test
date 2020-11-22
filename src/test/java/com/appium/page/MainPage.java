@@ -1,5 +1,6 @@
 package com.appium.page;
 
+import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -21,6 +22,7 @@ public class MainPage extends BasePage {
             capabilities.setCapability("appPackage","com.tencent.wework");
             capabilities.setCapability("appActivity",".launch.LaunchSplashActivity");
             capabilities.setCapability("noReset",true);
+            capabilities.setCapability("dontStopAppOnReset","true");
             capabilities.setCapability("automationName","UiAutomator2");
             driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"),capabilities);
             driver.manage().timeouts().implicitlyWait(40, TimeUnit.SECONDS);
@@ -31,6 +33,10 @@ public class MainPage extends BasePage {
 
     public MailListPage getMailListPage(){
         return new IndexPage(driver).gotoMailListPage();
+    }
+
+    public void quit(){
+        driver.quit();
     }
 
 }

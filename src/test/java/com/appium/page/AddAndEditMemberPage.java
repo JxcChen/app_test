@@ -24,7 +24,7 @@ public class AddAndEditMemberPage extends BasePage {
     private MobileBy departmentSetting = new MobileBy.ByAndroidUIAutomator("new UiSelector().text(\"设置部门\")");
     // 设置部门内的确定按钮
     private MobileBy setDepartmentConfirmBtn = new MobileBy.ByAndroidUIAutomator("new UiSelector().text(\"确定(1)\")");
-    private By telephone = new By.ByXPath("//*[@text='座机　']/following-sibling::*[@text='选填']");
+    private By telephone = new By.ByXPath("//*[@text='座机　']/following-sibling::android.widget.EditText");
     // 删除成员
     private MobileBy deleteMember = new MobileBy.ByAndroidUIAutomator("new UiSelector().text(\"删除成员\")");
     private MobileBy deleteMemberConfirmBtn = new MobileBy.ByAndroidUIAutomator("new UiSelector().text(\"确定\")");
