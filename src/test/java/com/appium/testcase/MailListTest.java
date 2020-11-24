@@ -1,22 +1,31 @@
 package com.appium.testcase;
 
+import com.appium.data.TestData;
 import com.appium.page.MailListPage;
 import com.appium.page.MainPage;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.appium.java_client.android.Activity;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MailListTest {
-    public static MainPage mainPage;
+public class MailListTest extends BaseTest {
     public static MailListPage mailListPage;
+
     @BeforeAll
     public static void setup(){
         mainPage = new MainPage();
@@ -24,10 +33,6 @@ public class MailListTest {
         // todo:清除数据
     }
 
-    @AfterAll
-    public static void teardown(){
-        mainPage.quit();
-    }
 
     @BeforeEach
     public void pageReset(){
@@ -40,9 +45,7 @@ public class MailListTest {
     @MethodSource("addMemberData")
     @Order(1)
     void addMemberTest(String name,String phone){
-        MailListPage successPage = mailListPage.addMemberSuccess(name, phone);
-        String mesg = successPage.searchAndGetSearchResult(name);
-        assertTrue(mesg.contains(name));
+        assertTrue(mailListPage.addMemberSuccess(name, phone).searchAndGetSearchResult(name).contains(name));
     }
 
     // todo:搜索测试
@@ -57,8 +60,7 @@ public class MailListTest {
     @Test
     @Order(4)
     void searchAndEditMemTest(){
-        MailListPage editSuccessPage = mailListPage.searchAndEditMember("王力宏", "25555577");
-        assertEquals("25555577",editSuccessPage.getEditResult());
+        assertEquals("25555577",mailListPage.searchAndEditMember("王力宏", "25555577").getEditResult());
     }
 
     // todo:删除人员
@@ -66,9 +68,7 @@ public class MailListTest {
     @MethodSource("deleteMemberData")
     @Order(3)
     void deleteMemTest(String name){
-        MailListPage deleteSuccessPage = mailListPage.deleteMember(name);
-        String mesg = deleteSuccessPage.searchAndGetSearchResult(name);
-        assertTrue(mesg.contains("无搜索结果"));
+        assertTrue(mailListPage.deleteMember(name).searchAndGetSearchResult(name).contains("无搜索结果"));
     }
 
 
@@ -88,32 +88,18 @@ public class MailListTest {
 
 
 
-    // 添加成员使用的数据
-    public static Stream<Arguments> addMemberData() {
-        return Stream.of(
-                Arguments.arguments("周杰伦", "12121221211"),
-                Arguments.arguments("林俊杰", "12121221212"),
-                Arguments.arguments("王力宏", "12121221213"));
-    }
-
     // 删除成员使用的数据
     public static Stream<Arguments> deleteMemberData() {
-        return Stream.of(
-                Arguments.arguments("周杰伦"),
-                Arguments.arguments("林俊杰"),
-                Arguments.arguments("王力宏"));
+        return getCaseData("deleteMember");
     }
 
     // 搜索测试数据
     public static Stream<Arguments> searchData(){
-        return Stream.of(
-                Arguments.arguments("周","周杰伦"),
-                Arguments.arguments("周杰","周杰伦"),
-                Arguments.arguments("杰伦","周杰伦"),
-                Arguments.arguments("周杰伦","周杰伦"),
-                Arguments.arguments("周伦","无搜索结果"),
-                Arguments.arguments("周劫伦","无搜索结果")
-        );
+        return getCaseData("search");
     }
 
+    // 添加成员测试数据
+    public static Stream<Arguments> addMemberData(){
+        return getCaseData("addMember");
+    }
 }

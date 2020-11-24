@@ -36,7 +36,7 @@ public class MainPage extends BasePage {
     }
 
     public void quit(){
-        driver.quit();
+        driver.closeApp();
     }
 
 }
